@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 
 export default function LoginPage() {
@@ -30,51 +31,65 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8">
-        <h1 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-          Connexion
-        </h1>
+    <main className="min-h-screen flex items-center justify-between bg-gray-50 gap-10">
+      <div className="w-1/2 h-screen">
+        <Image src="/v3.webp"
+          width={1000}
+          height={1000}
+          alt="Illustration de connexion"
+          className="w-full! h-screen! object-cover object-center"
+        />
+      </div>
+      <div className="w-1/2 h-screen relative flex flex-col items-center justify-start py-14">
+        <Image src="/logo-vcub.png"
+          width={75}
+          height={75}
+          alt="Logo V3 Bordeaux"
+        />
+        <div className="w-1/2 bg-white rounded-2xl shadow-md p-8 absolute top-1/2 translate-y-[-50%]">
+          <h1 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+            Connexion
+          </h1>
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nom d’utilisateur
+              </label>
+              <input type="text"
+                value={username}
+                onChange={(e) => setU(e.target.value)}
+                placeholder="john.doe"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg
+                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              />
+            </div>
 
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom d’utilisateur
-            </label>
-            <input type="text"
-              value={username}
-              onChange={(e) => setU(e.target.value)}
-              placeholder="john.doe"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg
-              focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mot de passe
+              </label>
+              <input type="password"
+                value={password}
+                onChange={(e) => setP(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg
+                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Mot de passe
-            </label>
-            <input type="password"
-              value={password}
-              onChange={(e) => setP(e.target.value)}
-              placeholder="••••••••"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg
-              focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            />
-          </div>
+            {err && <p className="text-sm text-red-600">{err}</p>}
 
-          {err && <p className="text-sm text-red-600">{err}</p>}
-
-          <button type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg
-            font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Connexion...' : 'Se connecter'}
-          </button>
-        </form>
+            <button type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg
+              font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Connexion...' : 'Se connecter'}
+            </button>
+          </form>
+        </div>
       </div>
     </main>
   )
