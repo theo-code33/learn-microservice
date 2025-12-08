@@ -42,18 +42,30 @@ services:
       - v3-bordeaux_db_data:/var/lib/postgresql/data
     restart: unless-stopped
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #   container_name: frontend
-  #   ports:
-  #     - "3000:3000"
-  #   env_file:
-  #     - ./frontend/.env
-  #   depends_on:
-  #     - auth-service
-  #     - order-service
-  #   restart: unless-stopped
+  v3-bordeaux:
+    build:
+      context: ./v3-bordeaux
+    container_name: v3-bordeaux
+    ports:
+      - "4001:4001"
+    env_file:
+      - ./v3-bordeaux/.env
+    depends_on:
+      - pg-v3-bordeaux
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - auth-service
+      - order-service
+    restart: unless-stopped
 
 volumes:
   auth_db_data:
