@@ -10,7 +10,7 @@ import { AddressForm, addressSchema } from "@/schema/adress-schema";
 import { Point, PointDisplay } from "@/types/map";
 import { Stations } from "@/types/stations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 
 const StationsPage = () => {
@@ -36,12 +36,12 @@ const StationsPage = () => {
     reset,
   } = form
 
-  const handleScrollToStation = (stationId: string) => {
+  const handleScrollToStation = useCallback((stationId: string) => {
     const element = document.getElementById(`station-${stationId}`);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }
+  }, []);
 
   const points = useMemo(() => {
     const parsedStations = stations.map((station) => ({
@@ -70,27 +70,22 @@ const StationsPage = () => {
     }
 
     return parsedStations as Point[];
-  }, [stations, centerCoordinates, reviewAverages]);
+  }, [stations, centerCoordinates, reviewAverages, handleScrollToStation]);
 
-  const fetchStations = () => {
-    fetch("/api/stations").then(async (res) => {
-      if (!res.ok) {
-        throw new Error("Failed to fetch stations");
-      }
-      const data = await res.json();
-      setStations(data)
-      setInitialStations(data)
-    })
+  const fetchStations = async () => {
+    const res = await fetch("/api/stations");
+    if (!res.ok) {
+      throw new Error("Failed to fetch stations");
+    }
+    return await res.json();
   }
 
   const fetchReviewAverages = async () => {
-    await fetch("/api/reviews/stations/avg").then(async (res) => {
-      if (!res.ok) {
-        throw new Error("Failed to fetch review averages");
-      }
-      const data = await res.json();
-      setReviewAverages(data);
-    })
+    const res = await fetch("/api/reviews/stations/avg");
+    if (!res.ok) {
+      throw new Error("Failed to fetch review averages");
+    }
+    return await res.json();
   }
 
   const onSubmit = (data: FieldValues) => {
@@ -101,8 +96,6 @@ const StationsPage = () => {
         throw new Error("Failed to fetch stations for address");
       }
       const data = await res.json();
-      console.log("data response =>", data);
-
       setStations(data.stations);
       setCenterCoordinates({
         lat: data.centerCoordinates.latitude,
@@ -123,8 +116,13 @@ const StationsPage = () => {
   }
 
   useEffect(() => {
-    fetchStations();
-    fetchReviewAverages();
+    Promise.all([fetchStations(), fetchReviewAverages()]).then(([stationsData, reviewsData]) => {
+      setStations(stationsData);
+      setInitialStations(stationsData);
+      setReviewAverages(reviewsData);
+    }).catch(error => {
+      console.error('Error fetching data:', error);
+    });
   }, []);
 
   return (
