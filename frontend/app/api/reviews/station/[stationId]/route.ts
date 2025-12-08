@@ -1,9 +1,10 @@
 import { Review } from "@/types/review"
 
-export async function GET(request: Request, { params }: { params: { stationId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ stationId: string }> }) {
+  const { stationId } = await params
   try {
     const data = await fetch(
-      `${process.env.REVIEW_SERVICE_URL || 'http://localhost:4001/api/reviews'}/station/${params.stationId}`,
+      `${process.env.REVIEW_SERVICE_URL || 'http://localhost:4001/api/reviews'}/station/${stationId}`,
       {
         method: 'GET',
         headers: {
