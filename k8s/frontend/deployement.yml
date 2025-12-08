@@ -25,3 +25,7 @@ spec:
               value: "http://auth-service:8000"
             - name: ORDER_SERVICE_URL
               value: "http://order-service:4000/orders"
+            - name: STATIONS_SERVICE_URL
+              value: "http://v3-bordeaux:4001/api/stations"
+            - name: REVIEW_SERVICE_URL
+              value: "http://v3-bordeaux:4001/api/reviews"

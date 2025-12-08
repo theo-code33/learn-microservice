@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: v3-bordeaux
+spec:
+  selector:
+    matchLabels:
+      app: v3-bordeaux
+  template:
+    metadata:
+      labels:
+        app: v3-bordeaux
+    spec:
+      containers:
+      - name: v3-bordeaux
+        image: theodev33/v3-bordeaux:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 4001
