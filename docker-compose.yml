@@ -27,9 +27,9 @@ services:
       - auth-service
     restart: unless-stopped
 
-  pg-v3-bordeaux:
+  postgres-service:
     image: postgres:16
-    container_name: pg-v3-bordeaux
+    container_name: postgres-service
     env_file:
       - ./v3-bordeaux/.env
     environment:
@@ -49,9 +49,9 @@ services:
     ports:
       - "4001:4001"
     env_file:
-      - ./v3-bordeaux/.env
+      - ./v3-bordeaux/.env.local
     depends_on:
-      - pg-v3-bordeaux
+      - postgres-service
     restart: unless-stopped
 
   frontend:
@@ -61,7 +61,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./frontend/.env
+      - ./frontend/.env.local
     depends_on:
       - auth-service
       - order-service
