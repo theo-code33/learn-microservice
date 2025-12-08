@@ -11,8 +11,6 @@ export class ReviewsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   createReview(@User() user: any, @Body() createReviewDto: CreateReviewDto) {
-    console.log(user);
-
     return this.reviewsService.createReview({
       ...createReviewDto,
       userId: user.sub,

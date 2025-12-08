@@ -42,9 +42,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    console.log(process.env.ORDER_SERVICE_URL);
-    
-
     const r = await fetch(
       `${process.env.ORDER_SERVICE_URL || 'http://localhost:4000/orders'}`,
       {
