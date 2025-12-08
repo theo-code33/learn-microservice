@@ -4,6 +4,7 @@ export enum PointDisplay {
   }
   
 export type Point = {
+    id: string;
     lat: number;
     lng: number;
     address: string;
