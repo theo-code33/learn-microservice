@@ -6,4 +6,6 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   await app.listen(process.env.PORT ?? 4001);
 }
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Error during application bootstrap:', err);
+});
