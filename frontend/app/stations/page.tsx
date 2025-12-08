@@ -126,12 +126,12 @@ const StationsPage = () => {
   }, []);
 
   return (
-    <div className="container m-auto w-full h-screen flex flex-col items-center py-10 gap-10 overflow-hidden">
+    <div className="w-full h-screen flex flex-col items-center pt-10 gap-10 overflow-hidden">
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}
           className="w-full flex flex-col items-center justify-center gap-2">
-          <div className="flex flex-row gap-2">
-            <p>Je veux :</p>
+          <div className="flex flex-row items-center gap-2">
+            <p>Je veux</p>
             <FormField
               control={control}
               name="wishes"
@@ -143,14 +143,13 @@ const StationsPage = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="rent">Louer un vélo</SelectItem>
-                      <SelectItem value="return">Une place de vélo</SelectItem>
+                      <SelectItem value="return">Rendre un vélo</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
               )}
             />
-          </div>
-          <div className="flex flex-row items-center gap-2">
+            <p>autour de l&apos;adresse :</p>
             <FormField
               control={control}
               name="address"
@@ -183,9 +182,9 @@ const StationsPage = () => {
           </div>
         </form>
       </Form>
-      <div className="w-full flex flex-row gap-10">
-        <Map points={points ?? []} zoom={zoomLevel} className="aspect-square" />
-        <ul className="w-full h-[80vh] flex flex-col items-center gap-2 overflow-scroll">
+      <div className="w-full h-full flex flex-row">
+        <Map points={points ?? []} zoom={zoomLevel} className="h-full" />
+        <ul className="w-full h-[85vh] flex flex-col items-center gap-2 overflow-scroll px-10 pb-5">
           {(stations).map((station) => (
             <StationCard key={station.id} station={station} reviewAverage={reviewAverages[station.id] ?? undefined} />
           ))}
