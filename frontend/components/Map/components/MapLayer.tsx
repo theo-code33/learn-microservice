@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Circle, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility';
 import L from 'leaflet';
+import { memo } from 'react';
 
 import iconBike from '@/public/bike.svg';
 import { cn } from '@/lib/utils';
@@ -17,23 +18,26 @@ type Props = {
   zoom?: number;
 };
 
-export default function MapLayer({ points, zoom = 12.5, className }: Props) {
-
+const MapLayer = ({ points, zoom = 12.5, className }: Props) => {
   const currentZoom = useMemo(() => {
     return zoom;
   }, [zoom]);
 
+  const center = useMemo(() => {
+    return points[0] || { lat: 0, lng: 0 };
+  }, [points]);
+
+  const icon = useMemo(() => {
+    return L.icon({
+      iconUrl: iconBike.src,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+    });
+  }, []);
+
   if (typeof window === 'undefined') {
-    return <></>
+    return <></>;
   }
-
-
-  const center = points[0] || { lat: 0, lng: 0 };
-  const icon = L.icon({
-    iconUrl: iconBike.src,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  });
 
   return (
     <MapContainer
@@ -55,9 +59,14 @@ export default function MapLayer({ points, zoom = 12.5, className }: Props) {
       {
         points.map((point) =>
           point.display === PointDisplay.MARKER ? (
-            <Marker key={point.lat.toString() + point.lng.toString()} position={[point.lat, point.lng]} icon={icon} eventHandlers={{
-              click: point.onClick
-            }} >
+            <Marker
+              key={`marker-${point.lat}-${point.lng}-${point.id ?? ''}`}
+              position={[point.lat, point.lng]}
+              icon={icon}
+              eventHandlers={{
+                click: point.onClick,
+              }}
+            >
               <Popup>
                 Adresse: {point.address} <br />
                 Vélos disponibles: {point.freebikes} <br />
@@ -67,7 +76,7 @@ export default function MapLayer({ points, zoom = 12.5, className }: Props) {
             </Marker>
           ) : point.display === PointDisplay.CIRCLE ? (
             <Circle
-              key={point.lat.toString() + point.lng.toString()}
+              key={`circle-${point.lat}-${point.lng}-${point.id ?? ''}`}
               center={[point.lat, point.lng]}
               radius={point.radius}
               fillOpacity={0.4}
@@ -78,3 +87,5 @@ export default function MapLayer({ points, zoom = 12.5, className }: Props) {
     </MapContainer >
   );
 }
+
+export default memo(MapLayer);
